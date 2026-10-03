@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><title>TANI CERDAS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#faf6ea;--card:#fff;--ink:#1d2b20;--mut:#5d6b60;--g1:#14532d;--g2:#3f9b4f;--line:#e4dfcb;--warn:#b45309;--bad:#b91c1c;--soft:#eef5e6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#111a13;--card:#1b271e;--ink:#eef3ea;--mut:#a3b3a5;--g1:#0e3a20;--g2:#6cc47c;--line:#2d3f32;--soft:#22331f}}
+:root[data-theme=dark]{--bg:#111a13;--card:#1b271e;--ink:#eef3ea;--mut:#a3b3a5;--g1:#0e3a20;--g2:#6cc47c;--line:#2d3f32;--soft:#22331f}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Segoe UI",system-ui,Arial,sans-serif}
+#nav{position:fixed;inset:0 auto 0 0;width:240px;background:var(--g1);color:#fff;padding:16px 10px;overflow:auto;z-index:20;padding-top:calc(16px + env(safe-area-inset-top,0px))}
+#nav h1{font-size:20px;margin:0 8px 2px}#nav small{display:block;margin:0 8px 14px;opacity:.8;font-size:12px}
+#nav a{display:block;color:#e8f3e0;padding:10px 12px;border-radius:10px;cursor:pointer;text-decoration:none;margin-bottom:2px}
+#nav a.on,#nav a:hover{background:rgba(255,255,255,.16)}
+#top{display:none;position:sticky;top:0;background:var(--g1);color:#fff;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top,0px));z-index:15;align-items:center;gap:10px}
+#top button{background:none;border:0;color:#fff;font-size:24px}
+main{margin-left:240px;padding:22px;max-width:1100px}
+h2{margin:0 0 4px;color:var(--g1)}@media(prefers-color-scheme:dark){h2{color:var(--g2)}}
+.sub{color:var(--mut);margin:0 0 16px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.stat b{display:block;font-size:26px;color:var(--g1)}@media(prefers-color-scheme:dark){.stat b{color:var(--g2)}}
+.stat span{color:var(--mut);font-size:13px}
+label{display:block;font-size:13px;color:var(--mut);margin:6px 0 2px}
+input,select,textarea{width:100%;padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);font:inherit}
+.btn{background:var(--g2);color:#fff;border:0;padding:10px 14px;border-radius:10px;cursor:pointer;font:inherit;font-weight:600;margin:4px 4px 4px 0}
+@media(prefers-color-scheme:dark){.btn{color:#0b1a0f}}
+.btn.alt{background:var(--soft);color:var(--ink);border:1px solid var(--line)}.btn.del{background:var(--bad);color:#fff}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{background:var(--soft)}
+.tag{display:inline-block;background:var(--soft);padding:2px 9px;border-radius:99px;font-size:12px}
+.sim{background:#fff3cd;color:#664d03;padding:6px 10px;border-radius:8px;font-size:13px;margin-bottom:12px}
+.warn{color:var(--warn);font-size:13px;margin:4px 0}.err{color:var(--bad);font-size:13px}
+.bar{height:16px;background:var(--soft);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--g2)}
+@media(max-width:800px){#nav{transform:translateX(-100%);transition:.2s}#nav.open{transform:none}#top{display:flex}main{margin:0;padding:14px}}
+@media print{#nav,#top,.np{display:none!important}main{margin:0}}
+</style></head><body>
+<div id="top"><button onclick="nav.classList.toggle('open')" aria-label="Menu">☰</button><b>🌱 TANI CERDAS</b></div>
+<div id="nav"></div><main id="m"></main>
+<script>
+const $=id=>document.getElementById(id),nav=$('nav'),M=$('m');
+const fmt=(n,d=2)=>Number(n).toLocaleString('id-ID',{maximumFractionDigits:d});
+const today=()=>new Date().toISOString().slice(0,10);
+let mem=null;const KEY='tanicerdas_v1';
+const seed=()=>({lahan:[{id:1,nama:'Petak A (simulasi)',lokasi:'Bogor',luas:16,tanah:'Latosol',kom:'Cabai',var:'Rawit',tgl:'2026-08-01',status:'Aktif'},{id:2,nama:'Sawah Blok 2 (simulasi)',lokasi:'Cianjur',luas:5000,tanah:'Aluvial',kom:'Padi',var:'Inpari',tgl:'2026-07-15',status:'Aktif'}],
+hitung:[],kec:[{id:1,tgl:'2026-08-02',kom:'Cabai',var:'Rawit',uji:100,kecambah:85,cat:'Data simulasi'}],
+tumbuh:[7,14,21,28,35].map((d,i)=>({id:i+1,lahan:'Petak A (simulasi)',tgl:'2026-08-'+String(d+1).padStart(2,'0'),awal:20,hidup:20-(i>2?1:0),tinggi:[5,11,19,28,36][i],kond:'Sehat',hama:0})),
+panen:[],giat:[{id:1,tgl:'2026-10-08',jenis:'Pemupukan',biaya:15000,jumlah:'400 g KCl',cat:'Jadwal contoh (simulasi)'}],
+keluhan:[{id:1,nama:'Anonim',kom:'Cabai',kat:'Daun menguning',desk:'Daun bawah menguning sejak 3 hari (simulasi).',status:'Menunggu tanggapan',tgl:'2026-09-28',resp:[]}],bk:{baik:85,sedang:70}});
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}S=S||seed();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const nid=a=>a.reduce((x,y)=>Math.max(x,y.id),0)+1;
+const v=id=>$(id).value.trim(),n=id=>parseFloat($(id).value);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const inp=(id,l,t='text',x='')=>`<div><label for="${id}">${l}</label><input id="${id}" type="${t}" ${x}></div>`;
+const sel=(id,l,o,x='')=>`<div><label for="${id}">${l}</label><select id="${id}" ${x}>${o.map(a=>`<option>${esc(a)}</option>`).join('')}</select></div>`;
+const KOM=['Padi','Jagung','Cabai','Tomat','Bawang merah','Kentang','Kedelai','Sayuran daun','Lainnya'];
+const lahanOpts=()=>S.lahan.map(l=>l.nama);
+
+/* ===== modul kalkulasi (murni, dapat diuji) ===== */
+const Calc={
+ hara:(dose,m2)=>dose*m2/10000,
+ produk:(kg,pct)=>pct>0?kg/(pct/100):NaN,
+ kandungan:(prodKg,pct)=>prodKg*pct/100,
+ germ:(u,k)=>u>0?k/u*100:NaN,
+ hidup:(a,b)=>a>0?b/a*100:NaN,
+ prod:(kg,ha)=>ha>0?kg/ha:NaN,
+ /* za:{g,n,s} gram ZA dan kadar N,S (%) -> dikurangkan dari kebutuhan N dan S */
+ rows(m2,rows,za){const zn=za.g/1000*za.n/100,zs=za.g/1000*za.s/100;
+  return rows.map(r=>{const need=Calc.hara(r.dose,m2);let sup=0;if(r.k=='N')sup=zn;if(r.k=='S')sup=zs;
+   const rem=Math.max(0,need-sup),pk=Calc.produk(rem,r.pct);return{...r,need,sup,rem,kg:pk,g:pk*1000,over:sup>need+1e-12}})}
+};
+function selfTest(){const r=Calc.rows(16,[{k:'N',dose:250,pct:46},{k:'P',dose:300,pct:36},{k:'K',dose:150,pct:60}],{g:0,n:21,s:24});
+ const t=[['Kebutuhan N 0,4 kg',r[0].need,.4],['Urea 869,57 g',r[0].g,869.565],['P₂O₅ 0,48 kg',r[1].need,.48],['SP-36 1333,33 g',r[1].g,1333.333],['K₂O 0,24 kg',r[2].need,.24],['KCl 400 g',r[2].g,400],['Germinasi 85/100',Calc.germ(100,85),85]];
+ return t.map(x=>[x[0],Math.abs(x[1]-x[2])<0.01]);}
+
+/* ===== grafik SVG ===== */
+function line(pts,unit){if(pts.length<2)return'<p class="sub">Belum cukup data untuk grafik (min. 2 catatan).</p>';
+ const W=520,H=190,p=30,mx=Math.max(...pts.map(q=>q.v))*1.1||1;const X=i=>p+i*(W-2*p)/(pts.length-1),Y=y=>H-p-y/mx*(H-2*p);
+ return`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:100%"><polyline fill="none" stroke="#3f9b4f" stroke-width="3" points="${pts.map((q,i)=>X(i)+','+Y(q.v)).join(' ')}"/>${pts.map((q,i)=>`<circle cx="${X(i)}" cy="${Y(q.v)}" r="4" fill="#14532d"/><text x="${X(i)}" y="${H-8}" font-size="10" text-anchor="middle" fill="currentColor">${q.l.slice(5)}</text><text x="${X(i)}" y="${Y(q.v)-8}" font-size="10" text-anchor="middle" fill="currentColor">${fmt(q.v,1)}</text>`).join('')}<text x="4" y="12" font-size="10" fill="currentColor">${unit}</text></svg>`}
+const tbl=(h,r)=>`<div class="tw"><table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${r.map(x=>`<tr>${x.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')||`<tr><td colspan="${h.length}">Belum ada data</td></tr>`}</table></div>`;
+const simBadge='<div class="sim">⚠ Data contoh = <b>data simulasi</b>. Data disimpan hanya di browser Anda (localStorage); tidak ada server, akun, atau penyuluh sungguhan yang terhubung.</div>';
+
+/* ===== router ===== */
+const P=[['dash','🏠 Dashboard'],['pupuk','🧪 Kalkulator Pupuk'],['kec','🌱 Perkecambahan'],['tumbuh','📈 Pemantauan Tanaman'],['eval','✅ Evaluasi Budidaya'],['kal','📅 Kalender Budidaya'],['keluh','💬 Keluhan Petani'],['lahan','🗺 Manajemen Lahan'],['lap','🖨 Laporan'],['set','⚙ Pengaturan']];
+function go(p){nav.classList.remove('open');location.hash=p;R[p]();nav.querySelectorAll('a').forEach(a=>a.classList.toggle('on',a.dataset.p==p));scrollTo(0,0)}
+nav.innerHTML='<h1>🌾 TANI CERDAS</h1><small>Hitung Tepat, Pantau Tanaman, Tingkatkan Hasil Panen.</small>'+P.map(a=>`<a data-p="${a[0]}" onclick="go('${a[0]}')">${a[1]}</a>`).join('');
+const head=(t,s)=>`<h2>${t}</h2><p class="sub">${s}</p>`;
+const R={};
+
+R.dash=()=>{const avg=S.kec.length?S.kec.reduce((a,k)=>a+Calc.germ(k.uji,k.kecambah),0)/S.kec.length:0;
+ const luas=S.lahan.reduce((a,l)=>a+l.luas,0),koms=new Set(S.lahan.filter(l=>l.status=='Aktif').map(l=>l.kom)).size;
+ const tp=S.tumbuh.map(t=>({l:t.tgl,v:t.tinggi})),nx=S.giat.filter(g=>g.tgl>=today()).sort((a,b)=>a.tgl>b.tgl?1:-1)[0];
+ M.innerHTML=head('Selamat datang, Sahabat Tani 👋','Asisten digital budidaya pertanian')+simBadge+`
+ <div class="grid">${[['Total lahan',fmt(luas)+' m² ('+fmt(luas/10000,3)+' ha)'],['Komoditas aktif',koms],['Kegiatan tercatat',S.giat.length],['Rata-rata perkecambahan',fmt(avg,1)+'%']].map(s=>`<div class="card stat"><b>${s[1]}</b><span>${s[0]}</span></div>`).join('')}</div>
+ <div class="card np"><b>Aksi cepat</b><br>${[['pupuk','Hitung Kebutuhan Pupuk'],['lahan','Tambah Data Tanaman'],['kec','Hitung Perkecambahan'],['tumbuh','Catat Pertumbuhan'],['keluh','Sampaikan Keluhan']].map(a=>`<button class="btn" onclick="go('${a[0]}')">${a[1]}</button>`).join('')}</div>
+ <div class="grid"><div class="card"><b>Grafik tinggi tanaman (cm)</b>${line(tp,'cm')}</div>
+ <div class="card"><b>Jadwal berikutnya</b><p>${nx?`${nx.tgl} — ${esc(nx.jenis)}`:'Belum ada jadwal'}</p><small class="sub">Pengingat hanya tampil di aplikasi ini (belum ada layanan notifikasi).</small>
+ <b>Ringkasan kebutuhan pupuk</b><p>${S.hitung.length?S.hitung.length+' perhitungan tersimpan; terakhir: '+esc(S.hitung.at(-1).lahan):'Belum ada perhitungan tersimpan'}</p></div></div>
+ <div class="card"><b>Keluhan terbaru</b>${tbl(['Tanggal','Kategori','Komoditas','Status'],S.keluhan.slice(-4).reverse().map(k=>[k.tgl,k.kat,k.kom,`<span class="tag">${k.status}</span>`]))}</div>`};
+
+/* ----- Kalkulator Pupuk ----- */
+const NUT=[{k:'N',lab:'N (nitrogen)',dose:250,f:'Urea',pct:46,b:'% N elemental'},{k:'P',lab:'P₂O₅',dose:300,f:'SP-36',pct:36,b:'% P₂O₅ (oksida)'},{k:'K',lab:'K₂O',dose:150,f:'KCl',pct:60,b:'% K₂O (oksida)'},{k:'Ca',lab:'Ca',dose:2000,f:'CaCO₃ (contoh)',pct:40,b:'% Ca (ikuti label)'},{k:'Mg',lab:'Mg',dose:60,f:'Kieserit',pct:14.5,b:'% Mg elemental (≈24% MgO × 0,6032)'},{k:'S',lab:'S (belerang)',dose:50,f:'Sumber S lain (contoh)',pct:24,b:'% S (ikuti label)'}];
+let last=null;
+R.pupuk=()=>{M.innerHTML=head('Kalkulator Kebutuhan Pupuk','Hara (kg) = dosis (kg/ha) × luas (m²) ÷ 10.000 · Pupuk (kg) = hara ÷ (kadar % ÷ 100)')+`
+<div class="card"><div class="grid">${sel('pl','Pilih lahan',['— isi manual —',...lahanOpts()],'onchange="pickL()"')}${inp('pf','Petani / kelompok tani')}${inp('pk','Komoditas','text','value="Cabai"')}${sel('ps','Tahap tumbuh',['Persiapan lahan','Vegetatif','Generatif','Pembuahan'])}${inp('pa','Luas lahan','number','min="0" step="any" value="16" oninput="upd()"')}${sel('pu','Satuan luas',['m²','ha'],'onchange="upd()"')}${inp('pt','Target hasil (opsional)')}</div>
+<div class="warn">Dosis di bawah hanya <b>contoh uji hitung</b>. Sesuaikan dengan komoditas, tahap tumbuh, analisis tanah, dan rekomendasi penyuluh. Dosis Ca (basis CaCO₃/amelioran) khususnya harus mengikuti hasil analisis tanah.</div></div>
+<div class="card"><b>Pupuk anorganik tunggal / ZA (kombinasi)</b><div class="grid">${inp('zg','ZA yang dipakai (gram)','number','min="0" step="any" value="0" oninput="upd()"')}${inp('zn','N dalam ZA (%)','number','value="21" oninput="upd()"')}${inp('zs','S dalam ZA (%)','number','value="24" oninput="upd()"')}</div><small class="sub">Kontribusi N dan S dari ZA dikurangkan dari kebutuhan sebelum menghitung urea / sumber S lain (tidak ada hitung ganda).</small></div>
+<div class="card"><div class="tw"><table><tr><th>Hara</th><th>Dosis (kg/ha)</th><th>Pupuk</th><th>Kadar (%)</th><th>Basis kadar</th><th>Pakai?</th></tr>${NUT.map((r,i)=>`<tr><td>${r.lab}</td><td><input id="d${i}" type="number" min="0" step="any" value="${r.dose}" oninput="upd()" style="width:90px"></td><td>${r.f}</td><td><input id="c${i}" type="number" min="0" step="any" value="${r.pct}" oninput="upd()" style="width:80px"></td><td>${r.b}</td><td><input id="x${i}" type="checkbox" checked onchange="upd()" style="width:auto"></td></tr>`).join('')}</table></div>
+<small class="sub">Hitung satu jenis pupuk: hilangkan centang pupuk lainnya. Beberapa jenis: centang semuanya.</small></div>
+<div id="pr"></div><div class="np"><button class="btn" onclick="saveC()">💾 Simpan hasil</button><button class="btn alt" onclick="copyC()">📋 Salin</button><button class="btn alt" onclick="window.print()">🖨 Cetak / PDF</button></div>`;upd()};
+function pickL(){const l=S.lahan.find(x=>x.nama==v('pl'));if(l){$('pa').value=l.luas;$('pu').value='m²';$('pk').value=l.kom}upd()}
+function upd(){const a=n('pa'),u=v('pu');let err='';if(!(a>=0)){err='Luas lahan wajib diisi angka ≥ 0.'}
+ const m2=u=='ha'?a*10000:a;const rows=NUT.map((r,i)=>({...r,dose:n('d'+i),pct:n('c'+i),on:$('x'+i).checked}));
+ if(rows.some(r=>!(r.dose>=0)||!(r.pct>=0)))err=err||'Dosis dan kadar tidak boleh kosong atau negatif.';
+ if(rows.some(r=>r.on&&r.pct==0))err=err||'Kadar pupuk 0% tidak bisa dipakai menghitung (pembagian dengan nol).';
+ const zg=n('zg')||0;if(zg<0)err=err||'Jumlah ZA tidak boleh negatif.';
+ if(err){$('pr').innerHTML=`<div class="card err">${err}</div>`;last=null;return}
+ const res=Calc.rows(m2,rows,{g:zg,n:n('zn')||0,s:n('zs')||0}).map((r,i)=>({...r,on:rows[i].on}));last={m2,res,zg};
+ const warns=res.filter(r=>r.over).map(r=>`<div class="warn">⚠ ZA memasok ${r.k} melebihi kebutuhan (${fmt(r.sup,3)} kg > ${fmt(r.need,3)} kg).</div>`).join('');
+ $('pr').innerHTML=`<div class="card"><b>Hasil untuk ${fmt(m2)} m² (${fmt(m2/10000,4)} ha)</b>${warns}`+tbl(['Hara','Dosis (kg/ha)','Kebutuhan hara (kg)','Dari ZA (kg)','Sisa (kg)','Pupuk','Kadar','Produk (gram)','Produk (kg)'],res.filter(r=>r.on).map(r=>[r.lab,fmt(r.dose),fmt(r.need,4),fmt(r.sup,4),fmt(r.rem,4),r.f,r.pct+'%',`<b>${fmt(r.g)}</b>`,fmt(r.kg,4)]))+(zg>0?`<p>ZA ${fmt(zg)} g memasok ${fmt(zg/1000*(n('zn')||0)/100,4)} kg N dan ${fmt(zg/1000*(n('zs')||0)/100,4)} kg S.</p>`:'')+`<small class="sub">Nilai dihitung dengan presisi penuh, ditampilkan dibulatkan. Kadar label P₂O₅, K₂O, MgO adalah bentuk oksida, bukan unsur elemental. Hasil adalah alat bantu hitung, bukan rekomendasi agronomis.</small></div>`}
+const cText=()=>last?`TANI CERDAS - Kebutuhan Pupuk (${v('pk')}, ${fmt(last.m2)} m²)\n`+last.res.filter(r=>r.on).map(r=>`${r.lab}: ${fmt(r.need,4)} kg hara -> ${r.f} ${fmt(r.g)} g`).join('\n'):'';
+function copyC(){try{navigator.clipboard.writeText(cText());alert('Disalin.')}catch(e){prompt('Salin manual:',cText())}}
+function saveC(){if(!last)return alert('Perbaiki input terlebih dahulu.');S.hitung.push({id:nid(S.hitung),tgl:today(),lahan:v('pl')=='— isi manual —'?(v('pf')||'Manual'):v('pl'),kom:v('pk'),m2:last.m2,rows:last.res.filter(r=>r.on).map(r=>({lab:r.lab,f:r.f,dose:r.dose,need:r.need,g:r.g}))});save();alert('Hasil tersimpan.')}
+
+/* ----- Perkecambahan ----- */
+R.kec=()=>{M.innerHTML=head('Kalkulator Perkecambahan','Perkecambahan (%) = benih berkecambah ÷ benih diuji × 100%')+`<div class="card"><div class="grid">${inp('kk','Komoditas','text','value="Cabai"')}${inp('kv','Varietas')}${inp('kt','Tanggal uji','date',`value="${today()}"`)}${inp('ku','Jumlah benih diuji','number','min="0" value="100" oninput="kc()"')}${inp('kg','Berkecambah','number','min="0" value="85" oninput="kc()"')}${inp('kn','Tidak berkecambah','number','readonly')}</div>${inp('kc','Catatan kondisi / penyebab gagal')}
+<b>Batas kategori (sesuaikan dengan standar benih komoditas)</b><div class="grid">${inp('b1','Baik ≥ (%)','number',`value="${S.bk.baik}"`)}${inp('b2','Sedang ≥ (%)','number',`value="${S.bk.sedang}"`)}</div><div id="kr"></div><button class="btn" onclick="ksave()">Simpan ke riwayat</button></div>
+<div class="card"><b>Riwayat pengujian</b>${tbl(['Tanggal','Komoditas','Varietas','Diuji','Kecambah','%','Catatan',''],S.kec.map(k=>[k.tgl,esc(k.kom),esc(k.var||'-'),k.uji,k.kecambah,fmt(Calc.germ(k.uji,k.kecambah),1)+'%',esc(k.cat||''),`<button class="btn del" onclick="del('kec',${k.id},'kec')">Hapus</button>`]))}</div>`;kc()};
+function kc(){const u=n('ku'),g=n('kg');const e=!(u>0)?'Jumlah benih diuji harus > 0.':!(g>=0)?'Isi jumlah berkecambah.':g>u?'Benih berkecambah tidak boleh melebihi benih diuji.':'';
+ if(e){$('kr').innerHTML=`<p class="err">${e}</p>`;$('kn').value='';return false}$('kn').value=u-g;const p=Calc.germ(u,g),b1=n('b1')||S.bk.baik,b2=n('b2')||S.bk.sedang;
+ $('kr').innerHTML=`<h3>${fmt(p,1)}% — ${p>=b1?'Baik':p>=b2?'Sedang':'Rendah'}</h3><div class="bar"><i style="width:${p}%"></i></div><p>${g} berkecambah, ${u-g} tidak berkecambah.</p>`;return true}
+function ksave(){if(!kc())return;S.bk={baik:n('b1'),sedang:n('b2')};S.kec.push({id:nid(S.kec),tgl:v('kt'),kom:v('kk'),var:v('kv'),uji:n('ku'),kecambah:n('kg'),cat:v('kc')});save();R.kec()}
+function del(k,id,p){if(confirm('Hapus data ini?')){S[k]=S[k].filter(x=>x.id!=id);save();R[p]()}}
+
+/* ----- Pertumbuhan ----- */
+R.tumbuh=()=>{M.innerHTML=head('Pemantauan Pertumbuhan Tanaman','Catat pengamatan berkala; indikator berasal dari data yang Anda masukkan.')+`<div class="card"><div class="grid">${sel('tl','Lahan',lahanOpts())}${inp('tt','Tanggal','date',`value="${today()}"`)}${inp('ta','Jumlah tanaman awal','number','min="0"')}${inp('th','Jumlah tanaman hidup','number','min="0"')}${inp('ti','Tinggi (cm)','number','min="0" step="any"')}${inp('td','Diameter batang (mm)','number','min="0" step="any"')}${inp('tj','Jumlah daun','number','min="0"')}${inp('tk','Kondisi daun/batang/tanah')}${inp('tw','Penyiraman / pemupukan terakhir')}${inp('tp','Tanaman terserang hama/penyakit','number','min="0" value="0"')}</div><p class="err" id="te"></p><button class="btn" onclick="tsave()">Simpan pengamatan</button><small class="sub"> Unggah foto belum tersedia pada versi demo ini.</small></div>
+<div class="card"><b>Grafik tinggi tanaman</b>${line(S.tumbuh.slice().sort((a,b)=>a.tgl>b.tgl?1:-1).map(t=>({l:t.tgl,v:t.tinggi})),'cm')}</div>
+<div class="card">${tbl(['Tanggal','Lahan','Awal','Hidup','Hidup %','Tinggi','Δ tinggi','Kondisi',''],S.tumbuh.slice().sort((a,b)=>a.tgl>b.tgl?1:-1).map((t,i,a)=>[t.tgl,esc(t.lahan),t.awal,t.hidup,fmt(Calc.hidup(t.awal,t.hidup),1)+'%',t.tinggi+' cm',i?'+'+fmt(t.tinggi-a[i-1].tinggi,1)+' cm':'-',esc(t.kond||''),`<button class="btn del" onclick="del('tumbuh',${t.id},'tumbuh')">Hapus</button>`]))}</div>`};
+function tsave(){const a=n('ta'),h=n('th'),t=n('ti');let e='';if(!(a>0&&h>=0&&t>=0))e='Isi jumlah awal (>0), hidup, dan tinggi dengan angka valid.';else if(h>a)e='Tanaman hidup tidak boleh melebihi tanaman awal.';
+ $('te').textContent=e;if(e)return;S.tumbuh.push({id:nid(S.tumbuh),lahan:v('tl'),tgl:v('tt'),awal:a,hidup:h,tinggi:t,diam:n('td')||0,daun:n('tj')||0,kond:v('tk'),hama:n('tp')||0});save();R.tumbuh()}
+
+/* ----- Evaluasi ----- */
+R.eval=()=>{M.innerHTML=head('Evaluasi Keberhasilan Budidaya','Setiap indikator dinilai terpisah — tidak digabung menjadi satu skor.')+`<div class="card"><div class="grid">${sel('el','Lahan',lahanOpts())}${inp('e1','Benih diuji','number','min="0" value="100" oninput="ev()"')}${inp('e2','Benih berkecambah','number','min="0" value="85" oninput="ev()"')}${inp('e3','Tanaman awal','number','min="0" value="20" oninput="ev()"')}${inp('e4','Tanaman hidup','number','min="0" value="19" oninput="ev()"')}${inp('e5','Tanaman diamati','number','min="0" value="19" oninput="ev()"')}${inp('e6','Tanaman terserang','number','min="0" value="2" oninput="ev()"')}${inp('e7','Hasil panen (kg)','number','min="0" step="any" value="1.2" oninput="ev()"')}${inp('e8','Luas lahan (m²)','number','min="0" value="16" oninput="ev()"')}${inp('e9','Target panen (kg)','number','min="0" step="any" value="1.5" oninput="ev()"')}${inp('ed','Tanggal panen','date',`value="${today()}"`)}${sel('eq','Kualitas',['Baik','Sedang','Kurang'])}${inp('ec','Kendala budidaya')}</div><div id="ev"></div><button class="btn" onclick="esave()">Simpan hasil panen</button></div>`;ev()};
+function ev(){const x=i=>n('e'+i),E=[];const pc=(v,t)=>isFinite(v)?fmt(v,1)+'%':'—';
+ const g=Calc.germ(x(1),x(2)),h=Calc.hidup(x(3),x(4)),s=Calc.hidup(x(5),x(6)),pr=Calc.prod(x(7),x(8)/10000),t=x(9)>0?x(7)/x(9)*100:NaN;
+ let e=x(2)>x(1)?'Berkecambah > diuji.':x(4)>x(3)?'Hidup > awal.':x(6)>x(5)?'Terserang > diamati.':'';
+ $('ev').innerHTML=e?`<p class="err">${e}</p>`:`<div class="grid">${[['Perkecambahan',pc(g)],['Kelangsungan hidup',pc(h)],['Serangan tanaman',pc(s)],['Produktivitas',isFinite(pr)?fmt(pr)+' kg/ha ('+fmt(pr/1000,2)+' t/ha)':'—'],['Pencapaian target',pc(t)]].map(a=>`<div class="card stat"><b>${a[1]}</b><span>${a[0]}</span></div>`).join('')}</div><small class="sub">Indikator pemantauan, bukan jaminan hasil panen.</small>`}
+function esave(){S.panen.push({id:nid(S.panen),lahan:v('el'),tgl:v('ed'),kg:n('e7')||0,target:n('e9')||0,luas:n('e8')||0,mutu:v('eq'),cat:v('ec')});save();alert('Hasil panen tersimpan.')}
+
+/* ----- Kalender ----- */
+R.kal=()=>{M.innerHTML=head('Kalender & Buku Harian Budidaya','Pengingat hanya tampil di sini; belum ada notifikasi terkirim.')+`<div class="card"><div class="grid">${inp('gt','Tanggal','date',`value="${today()}"`)}${sel('gj','Jenis kegiatan',['Pengolahan lahan','Penanaman','Penyiraman','Pemupukan','Penyiangan','Pengendalian hama/penyakit','Pengamatan','Panen'])}${inp('gb','Biaya (Rp)','number','min="0" value="0"')}${inp('gm','Jumlah bahan')}${inp('gc','Catatan')}</div><button class="btn" onclick="gsave()">Tambah kegiatan</button></div><div class="card">${tbl(['Tanggal','Kegiatan','Biaya','Bahan','Catatan','Status',''],S.giat.slice().sort((a,b)=>a.tgl>b.tgl?1:-1).map(g=>[g.tgl,g.jenis,'Rp '+fmt(g.biaya,0),esc(g.jumlah||''),esc(g.cat||''),g.tgl>=today()?'<span class="tag">Akan datang</span>':'Lewat',`<button class="btn del" onclick="del('giat',${g.id},'kal')">Hapus</button>`]))}</div>`};
+function gsave(){if(!(n('gb')>=0)||!v('gt'))return alert('Tanggal dan biaya (≥0) wajib valid.');S.giat.push({id:nid(S.giat),tgl:v('gt'),jenis:v('gj'),biaya:n('gb'),jumlah:v('gm'),cat:v('gc')});save();R.kal()}
+
+/* ----- Keluhan (bersama via db jika tersedia) ----- */
+const ST=['Menunggu tanggapan','Sedang ditinjau','Perlu informasi tambahan','Sudah ditanggapi','Selesai'];
+const KAT={'Daun menguning':'Periksa drainase, kecukupan hara, dan kemungkinan penyakit.','Hama':'Identifikasi jenis hama dahulu.','Penyakit tanaman':'Pisahkan tanaman yang terlihat sakit.','Masalah pemupukan':'Cek dosis dan kadar label pupuk di Kalkulator Pupuk.','Kekurangan air':'Cek jadwal penyiraman dan kelembapan tanah.','Kelebihan air':'Perbaiki drainase.','Kegagalan perkecambahan':'Uji daya kecambah benih.','Pertumbuhan terhambat':'Bandingkan dengan catatan pertumbuhan.','Tanah kurang subur':'Pertimbangkan analisis tanah.','Masalah pemasaran':'Hubungi kelompok tani/penyuluh.','Harga dan distribusi hasil panen':'Hubungi kelompok tani/penyuluh.','Lainnya':'Jelaskan lebih rinci.'};
+let DB=null,ME=null,CAN=false,SH=[];
+async function initCloud(){try{const u=await claude.use('user');if(u){ME=await u.me();CAN=await u.canEdit()}const d=await claude.use('db');if(d&&ME&&ME.id){DB=d.collection('keluhan');DB.onSnapshot(s=>{SH=s.docs.map(x=>({...x.data(),id:x.id}));if(location.hash=='#keluh')ql()},()=>{DB=null})}}catch(e){}if(location.hash=='#keluh')R.keluh()}
+const KL=()=>DB?SH.slice().sort((a,b)=>(b.ts||0)-(a.ts||0)):S.keluhan.slice().reverse();
+R.keluh=()=>{const b=DB?`<div class="sim" style="background:var(--soft);color:var(--ink)">🟢 Terhubung sebagai <b>${esc(ME.name||'Pengguna')}</b> (${CAN?'penyuluh/admin':'petani'}). Keluhan dibagikan ke semua pengguna yang diundang ke halaman ini.</div>`:'<div class="sim">Mode lokal: keluhan hanya tersimpan di browser ini. Masuk dengan akun claude.ai atau buka lewat undangan pemilik halaman agar keluhan terhubung ke pengguna lain.</div>';
+ M.innerHTML=head('Keluhan & Konsultasi Petani','Sampaikan masalah budidaya dan terima tanggapan penyuluh.')+b+`<div class="card"><div class="grid">${inp('qn','Nama petani')}<div><label><input type="checkbox" id="qa" style="width:auto"> Anonim</label></div>${inp('qw','Wilayah (umum)')}${inp('qk','Komoditas','text','value="Cabai"')}${sel('qs','Tahap tumbuh',['Persiapan','Vegetatif','Generatif','Panen'])}${sel('qc','Kategori',Object.keys(KAT),'onchange="qh()"')}${inp('qm','Mulai muncul','date')}${inp('qr','Luas terdampak (m²)','number','min="0"')}</div><label for="qd">Deskripsi masalah</label><textarea id="qd" rows="3"></textarea>${inp('qu','Upaya penanganan yang sudah dilakukan')}<p class="warn" id="qt"></p><p class="err" id="qe"></p><button class="btn" onclick="qsave()">Kirim keluhan</button></div><div id="ql"></div>`;qh();ql()};
+function qh(){$('qt').textContent='Saran awal: '+KAT[v('qc')]+' Ini bukan diagnosis; untuk hama, penyakit, atau keracunan tanaman, verifikasi ke penyuluh/ahli pertanian.'}
+async function qsave(){if(v('qd').length<10)return $('qe').textContent='Deskripsi minimal 10 karakter.';const k={nama:$('qa').checked?'Anonim':(v('qn')||ME&&ME.name||'Anonim'),kom:v('qk'),kat:v('qc'),wil:v('qw'),desk:v('qd'),status:ST[0],tgl:today(),resp:[],ts:Date.now()};
+ if(DB){try{await DB.doc('k'+k.ts).set({...k,uid:ME.id})}catch(e){return $('qe').textContent='Gagal mengirim: '+(e.message||e.code)}$('qd').value='';$('qe').textContent='✅ Terkirim ke daftar bersama.'}else{S.keluhan.push({id:nid(S.keluhan),...k});save();R.keluh()}}
+function ql(){const el=$('ql');if(!el)return;const can=!DB||CAN;el.innerHTML=KL().map(k=>`<div class="card"><b>${esc(k.kat)}</b> · ${esc(k.kom)} · ${k.tgl} · ${esc(k.nama)}<p>${esc(k.desk)}</p>${can?`<select onchange="qst('${k.id}',this.value)" class="np">${ST.map(s=>`<option ${s==k.status?'selected':''}>${s}</option>`).join('')}</select>`:`<span class="tag">${k.status}</span>`}${(k.resp||[]).map(r=>`<p>💬 <i>${esc(r.t||r)}</i> <span class="tag">${esc(r.by||'tanggapan simulasi')}</span></p>`).join('')}${can?`<div class="np"><input id="r${k.id}" placeholder="Tulis tanggapan penyuluh/admin"><button class="btn alt" onclick="qr('${k.id}')">Kirim tanggapan</button></div>`:''}</div>`).join('')||'<p class="sub">Belum ada keluhan.</p>'}
+async function qst(id,s){if(DB)try{await DB.doc(id).update({status:s})}catch(e){alert('Gagal: '+e.message)}else{S.keluhan.find(k=>k.id==id).status=s;save()}}
+async function qr(id){const t=v('r'+id);if(!t)return;if(DB){const k=SH.find(x=>x.id==id);try{await DB.doc(id).update({resp:[...(k.resp||[]),{t,by:ME.name||'Penyuluh'}],status:ST[3]})}catch(e){alert('Gagal: '+e.message)}}else{S.keluhan.find(k=>k.id==id).resp.push(t);save();ql()}}
+
+/* ----- Lahan ----- */
+let ef=null;
+R.lahan=()=>{const q=(window.lq||'').toLowerCase(),e=S.lahan.find(l=>l.id==ef)||{};M.innerHTML=head('Manajemen Lahan','Tambah, ubah, cari, dan hapus lahan.')+`<div class="card"><div class="grid">${inp('ln','Nama lahan','text',`value="${esc(e.nama||'')}"`)}${inp('ll','Lokasi umum','text',`value="${esc(e.lokasi||'')}"`)}${inp('lu','Luas (m²)','number',`min="0" step="any" value="${e.luas??16}"`)}${inp('lt','Jenis tanah','text',`value="${esc(e.tanah||'')}"`)}${inp('lk','Komoditas','text',`value="${esc(e.kom||'')}"`)}${inp('lv','Varietas','text',`value="${esc(e.var||'')}"`)}${inp('ld','Tanggal tanam','date',`value="${e.tgl||today()}"`)}${sel('ls','Status',['Aktif','Selesai panen','Istirahat'])}</div><p class="err" id="le"></p><button class="btn" onclick="lsave()">${e.id?'Perbarui':'Tambah'} lahan</button></div>
+<div class="card"><input placeholder="🔍 Cari lahan / komoditas" value="${esc(window.lq||'')}" oninput="lq=this.value;R.lahan();document.querySelector('[placeholder^=🔍]').focus()">${tbl(['Lahan','Lokasi','Luas','Komoditas','Tanam','Status',''],S.lahan.filter(l=>(l.nama+l.kom).toLowerCase().includes(q)).map(l=>[esc(l.nama),esc(l.lokasi),fmt(l.luas)+' m²',esc(l.kom),l.tgl,l.status,`<button class="btn alt" onclick="ef=${l.id};R.lahan()">Ubah</button><button class="btn del" onclick="del('lahan',${l.id},'lahan')">Hapus</button>`]))}</div>`};
+function lsave(){const u=n('lu');if(!v('ln')||!(u>0))return $('le').textContent='Nama wajib diisi dan luas harus > 0.';const o={nama:v('ln'),lokasi:v('ll'),luas:u,tanah:v('lt'),kom:v('lk'),var:v('lv'),tgl:v('ld'),status:v('ls')};
+ if(ef){Object.assign(S.lahan.find(l=>l.id==ef),o);ef=null}else S.lahan.push({id:nid(S.lahan),...o});save();R.lahan()}
+
+/* ----- Laporan ----- */
+R.lap=()=>{M.innerHTML=head('Laporan & Ekspor','Pilih laporan lalu cetak / simpan sebagai PDF.')+`<div class="np card">${sel('rp','Jenis laporan',['Kebutuhan pupuk','Perkecambahan','Pertumbuhan tanaman','Hasil panen','Biaya produksi','Rekapitulasi keluhan'],'onchange="rl()"')}<button class="btn" onclick="window.print()">🖨 Cetak / PDF</button></div><div class="card" id="rb"></div>`;rl()};
+function rl(){const t=v('rp'),h=`<h3>Laporan ${t} — TANI CERDAS</h3><p>Dibuat: ${today()} · Lahan: ${S.lahan.map(l=>esc(l.nama)+' ('+fmt(l.luas)+' m²)').join(', ')}</p>`;let b='';
+ if(t=='Kebutuhan pupuk')b=tbl(['Tanggal','Lahan','Luas m²','Hara','Dosis kg/ha','Kebutuhan hara kg','Pupuk','Produk g'],S.hitung.flatMap(x=>x.rows.map(r=>[x.tgl,esc(x.lahan),fmt(x.m2),r.lab,fmt(r.dose),fmt(r.need,4),r.f,fmt(r.g)])));
+ if(t=='Perkecambahan')b=tbl(['Tanggal','Komoditas','Diuji','Kecambah','%'],S.kec.map(k=>[k.tgl,esc(k.kom),k.uji,k.kecambah,fmt(Calc.germ(k.uji,k.kecambah),1)]));
+ if(t=='Pertumbuhan tanaman')b=tbl(['Tanggal','Lahan','Hidup','Awal','Tinggi cm'],S.tumbuh.map(x=>[x.tgl,esc(x.lahan),x.hidup,x.awal,x.tinggi]));
+ if(t=='Hasil panen')b=tbl(['Tanggal','Lahan','Panen kg','Target kg','Pencapaian %','Produktivitas kg/ha','Mutu'],S.panen.map(p=>[p.tgl,esc(p.lahan),fmt(p.kg),fmt(p.target),fmt(p.target?p.kg/p.target*100:0,1),fmt(Calc.prod(p.kg,p.luas/10000)||0),p.mutu]));
+ if(t=='Biaya produksi')b=tbl(['Tanggal','Kegiatan','Biaya (Rp)'],S.giat.map(g=>[g.tgl,g.jenis,fmt(g.biaya,0)]))+`<p><b>Total: Rp ${fmt(S.giat.reduce((a,g)=>a+g.biaya,0),0)}</b></p>`;
+ if(t=='Rekapitulasi keluhan')b=tbl(['Tanggal','Kategori','Komoditas','Status'],S.keluhan.map(k=>[k.tgl,k.kat,esc(k.kom),k.status]));
+ $('rb').innerHTML=h+b+'<small class="sub">Indikator pemantauan, bukan jaminan hasil panen.</small>'}
+
+/* ----- Pengaturan ----- */
+R.set=()=>{M.innerHTML=head('Pengaturan','Tema, data, dan pengujian rumus.')+`<div class="card"><button class="btn alt" onclick="const r=document.documentElement;r.dataset.theme=r.dataset.theme=='dark'?'light':'dark'">🌓 Ganti tema</button><button class="btn del" onclick="if(confirm('Kembalikan semua data ke data simulasi?')){S=seed();save();R.set()}">Reset data demo</button></div><div class="card"><b>Uji rumus otomatis (contoh 16 m²)</b>${selfTest().map(t=>`<p>${t[1]?'✅':'❌'} ${t[0]}</p>`).join('')}</div><div class="card"><b>Catatan</b><p>Versi demo: data hanya di browser ini. Belum ada akun, database online, unggah foto permanen, atau pengiriman keluhan sungguhan. Untuk produksi, hubungkan ke backend (mis. Supabase).</p></div>`};
+go(location.hash.slice(1)in R?location.hash.slice(1):'dash');
+try{if(window.claude)initCloud()}catch(e){}
+</script></body></html>
